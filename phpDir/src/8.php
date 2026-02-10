@@ -26,6 +26,14 @@
 		Step 4 - echo the variable
 
 	*/
+	// Step 1: 
+$text = "Hello PHP";
+
+// Step 2 + 3: 
+$encrypted = crypt($text, '$6$rounds=5000$mysalt$');
+
+// Step 4: показване
+echo "<p>Encrypted text: " . $encrypted . "</p>";
 	
 	?>
 

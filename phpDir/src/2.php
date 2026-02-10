@@ -44,6 +44,56 @@ $array2 = array(
 	"third" => 30
 );
 
+// Показваме всички стойности като списък
+echo "The associative array is: " . implode(", ", $array2);
+echo "<br>";
+
+// Показваме ключовете и стойностите по отделно
+foreach ($array2 as $key => $value) {
+    echo "The value of " . $key . " is " . $value . "<br>";
+    echo "<br>";
+}
+
+// Сума на стойностите (не на ключовете)
+$sum = 0;
+foreach ($array2 as $value) {
+    $sum += $value;
+}
+echo "The sum of the associative array is " . $sum;
+echo "<br>";
+
+//---------------Martin's code -----------------
+// set the value of number1 and number2
+$number1 = 10;
+$number2 = 20;
+
+// add the two variables and display the sum with echo
+echo $number1 + $number2;
+
+// make a regular array with the values 10, 20, 30, 40, 50
+$array = array(10, 20, 30, 40, 50);
+echo "The array is ".implode(", ", $array);
+echo "<br>";
+echo "The sum of the array is ".array_sum($array);
+echo "<br>";
+
+// make an associative array with the values 10, 20, 30, 40, 50 and display the values
+$associativeArray = array("10" => "ten", "20" => "twenty", "30" => "thirty", "40" => "forty", "50" => "fifty");
+echo "The associative array is ".implode(", ", $associativeArray);
+echo "<br>";
+foreach ($associativeArray as $key => $value) {
+	echo "The value of ".$key." is ".$value."<br>";
+	echo "<br>";
+}
+echo "<br>";
+// Sum of the associative array using the values not the keys
+$sum = 0;
+foreach ($associativeArray as $key => $value) {
+	$sum += intval($key);
+}
+echo "The sum of the associative array is ".$sum;
+echo "<br>";
+
 
 
 

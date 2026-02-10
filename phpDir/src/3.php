@@ -66,6 +66,41 @@ if ($language == "JavaScript") {
 			echo "Weekend";
 	}	
 
+//---------------------------------Martin's code -----------------
+// set the value of number1 and number2
+$number1 = 50;
+$number2 = 20;
+
+// add the two variables and display the sum with echo
+echo "<p>The sum of ".$number1." and ".$number2." is </p>";
+echo "<p>".$number1 + $number2."</p>";
+
+echo "<br>";
+
+// make a for loop that displays 10 numbers
+for ($i = 0; $i < 10; $i++) {
+	echo "<p>".$i."</p>";
+}
+echo "<br>";
+
+// make a switch statement that test against one condition with 5 cases
+switch ($number1) {
+	case 10:
+		echo "number1 is 10";
+		break;
+	case 20:
+		echo "number1 is 20";
+		break;
+	case 30:
+		echo "number1 is 30";
+		break;
+	case 40:
+		echo "number1 is 40";
+		break;
+	case 50:
+		echo "number1 is 50";
+		break;
+}
 
 	
 ?>

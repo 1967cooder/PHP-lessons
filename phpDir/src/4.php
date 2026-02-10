@@ -23,7 +23,38 @@
 
  */
 //Step1
+function calculateSum() {
+	$a = 5;
+	$b = 10;
+	return $a + $b;
+}
+echo "<h2>Result: " . calculateSum () . "</h2>";// Извикваме функцията и показваме резултата
 
+echo "<hr>";
+
+//Step2
+function multiply($num1, $num2) {
+	return $num1 * $num2;
+}
+echo "<h2>Multiply Result " . multiply(4, 5) . "</h2>";
+
+//---------------Martin's code -----------------
+// define a function that returns the sum of two numbers
+function sumTwoNumbers($number1, $number2) {
+	return $number1 + $number2;
+}
+
+// call the function and display the result
+echo "The sum of 10 and 90 is ".sumTwoNumbers(10, 90);
+echo "<br>";
+
+// define a function that passes parameters and call it using parameter values
+function sumUsingParameters($number1, $number2) {
+	return $number1 + $number2;
+}
+
+// call the function and display the result
+echo "The sum of 10 and 20 is ".sumUsingParameters(10, 20);
 	
 ?>
 
