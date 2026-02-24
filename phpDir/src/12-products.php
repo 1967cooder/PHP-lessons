@@ -3,6 +3,9 @@
 require_once "auth/SupabaseAuth.php";
 $auth = new SupabaseAuth();
 
+// initialize error
+$error = null;
+
 // Fetch products from supabase
 try {
     $products = $auth->query('products', [
