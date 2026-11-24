@@ -7,23 +7,12 @@
 
 require_once 'auth/SupabaseAuth.php';
 
-// Start the session before reading flash messages
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 $auth = null;
 $error = null;
 $success = null;
 $notes = [];
 $user = null;
 $configError = null;
-
-// Retrieve a one-time success message after redirect
-if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
-}
 
 // Initialize Supabase connection
 try {
@@ -54,18 +43,14 @@ if ($auth && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     'title' => $title,
                     'content' => $content
                 ]);
-                $_SESSION['flash_success'] = "Note added!";
-                header('Location: 11-authentication.php');
-                exit;
+                $success = "Note added!";
             }
         }
 
         if (isset($_POST['action']) && $_POST['action'] === 'delete_note' && $auth->isLoggedIn()) {
             $noteId = (int)$_POST['note_id'];
             $auth->delete('user_notes', 'id=eq.' . $noteId);
-            $_SESSION['flash_success'] = "Note deleted!";
-            header('Location: 11-authentication.php');
-            exit;
+            $success = "Note deleted!";
         }
 
         $user = $auth->getCurrentUser();

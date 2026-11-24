@@ -20,7 +20,6 @@ class SupabaseAuth {
 
     // Current user session
     private $accessToken = null;
-    private $refreshToken = null;
     private $user = null;
 
     // Logging configuration
@@ -43,7 +42,6 @@ class SupabaseAuth {
         // Check if user is already logged in (from session)
         if (isset($_SESSION['supabase_access_token'])) {
             $this->accessToken = $_SESSION['supabase_access_token'];
-            $this->refreshToken = $_SESSION['supabase_refresh_token'] ?? null;
             $this->user = $_SESSION['supabase_user'] ?? null;
         }
     }
@@ -135,7 +133,6 @@ class SupabaseAuth {
         $_SESSION['supabase_access_token'] = $accessToken;
         if ($refreshToken) {
             $_SESSION['supabase_refresh_token'] = $refreshToken;
-            $this->refreshToken = $refreshToken;
         }
 
         $this->accessToken = $accessToken;
@@ -148,63 +145,6 @@ class SupabaseAuth {
         }
 
         return $user;
-    }
-
-    /**
-     * Refresh the Supabase session using the stored refresh token.
-     */
-    private function refreshSession() {
-        if (!$this->refreshToken) {
-            throw new Exception("No refresh token available. Please sign in again.");
-        }
-
-        $url = $this->supabaseUrl . '/auth/v1/token?grant_type=refresh_token';
-
-        $ch = curl_init();
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                'apikey: ' . $this->supabaseKey,
-                'Content-Type: application/json',
-            ],
-            CURLOPT_POSTFIELDS => json_encode([
-                'refresh_token' => $this->refreshToken,
-            ]),
-        ]);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
-
-        if ($error) {
-            throw new Exception("Token refresh cURL error: " . $error);
-        }
-
-        $decoded = json_decode($response, true);
-
-        if ($httpCode >= 400 || empty($decoded['access_token']) || empty($decoded['refresh_token'])) {
-            $message = $decoded['msg'] ?? $decoded['message'] ?? $decoded['error_description'] ?? 'Unknown refresh error';
-            throw new Exception("Supabase token refresh failed ($httpCode): " . $message);
-        }
-
-        $this->accessToken = $decoded['access_token'];
-        $this->refreshToken = $decoded['refresh_token'];
-
-        $_SESSION['supabase_access_token'] = $this->accessToken;
-        $_SESSION['supabase_refresh_token'] = $this->refreshToken;
-
-        if (isset($decoded['user'])) {
-            $this->user = $decoded['user'];
-            $_SESSION['supabase_user'] = $this->user;
-        }
-
-        $this->log('INFO', 'Supabase session refreshed successfully');
-
-        return true;
     }
 
     /**
@@ -341,7 +281,7 @@ class SupabaseAuth {
      * This is the core method that handles all API communication.
      * It adds the required headers for authentication.
      */
-    private function makeRequest($method, $endpoint, $data = null, $retry = true) {
+    private function makeRequest($method, $endpoint, $data = null) {
         $url = $this->supabaseUrl . $endpoint;
 
         // Log the request:
@@ -392,14 +332,6 @@ class SupabaseAuth {
 
         // Parse response
         $decoded = json_decode($response, true);
-
-        // Refresh the session and retry once if the access token has expired
-        if ($httpCode === 401 && $retry && $this->refreshToken) {
-            $this->log('INFO', 'Access token expired. Refreshing session...');
-            $this->refreshSession();
-
-            return $this->makeRequest($method, $endpoint, $data, false);
-        }
 
         // Check for API errors
         if ($httpCode >= 400) {

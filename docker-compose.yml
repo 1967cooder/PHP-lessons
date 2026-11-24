@@ -14,8 +14,6 @@ services:
   db:
     container_name: db
     image: mysql
-    volumes:
-      - mysql-m1-full-restore:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: lionPass
@@ -33,7 +31,3 @@ services:
       PMA_HOST: db
     depends_on:
       - db
-
-volumes:
-  mysql-m1-full-restore:
-    external: true
