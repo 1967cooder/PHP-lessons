@@ -1,2 +1,4 @@
 #Environment Variables
 .env
+# macOS Finder metadata
+.DS_Store
